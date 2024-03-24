@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=3 uid="uid://dj0msha0efufl"]
+
+[ext_resource type="Script" path="res://asteroid.gd" id="1_3nsj5"]
+[ext_resource type="Texture2D" uid="uid://csphhmuj7en0h" path="res://CelestialObjects.png" id="1_876cj"]
+[ext_resource type="Script" path="res://rotate_planet.gd" id="2_dod0b"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h5q64"]
+atlas = ExtResource("1_876cj")
+region = Rect2(0, 224, 34, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_l1qle"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h5q64")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xqq5x"]
+size = Vector2(31, 31.5)
+
+[node name="Asteroid" type="RigidBody2D" groups=["Asteroid"]]
+gravity_scale = 0.0
+script = ExtResource("1_3nsj5")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_l1qle")
+script = ExtResource("2_dod0b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_xqq5x")
