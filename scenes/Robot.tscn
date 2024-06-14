@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://bi2kxkqkpx1f8"]
+
+[ext_resource type="Script" path="res://scenes/Robot.gd" id="1_s52um"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cnuoi"]
+bg_color = Color(0, 0.67966, 0.733334, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[node name="Robot" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+script = ExtResource("1_s52um")
+
+[node name="Panel" type="Panel" parent="CharacterBody2D"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 45.0
+offset_bottom = 45.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_cnuoi")
