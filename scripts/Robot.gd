@@ -9,11 +9,13 @@ enum COLOR {RED,BLUE,GREEN,YELLOW}
 var cell_size = 50
 @onready var panel = $Panel
 
+# VARIABLES
 var robot_grid_position = Vector2()
 var moving = false
 var direction = Vector2.ZERO
 var clicked_on_robot = false
 
+# WHEN GAME START
 func _ready():
 	# ATTRIBUTE COLOR ROBOT
 	if robot_color == COLOR.RED:
@@ -29,15 +31,34 @@ func _ready():
 		bg_color = Color(0.8, 0.8, 0.2, 1)
 		border_color = Color(0.2, 0.2, 0.8, 1) 
 	robot_grid_position = Vector2(int(position.x) / 50,	int(position.y) / 50)
-		
+
+# GAME LOOP
 func _physics_process(delta):
+	robot_grid_position = Vector2(int(position.x) / 50,	int(position.y) / 50) 
 	if not moving and not(Global.red_moving or Global.blue_moving or Global.green_moving or Global.yellow_moving):
 		mouse_click()
 	if clicked_on_robot:
 		wait_robot_to_move()
-		move_and_slide()
-	stop_robot_to_wall()
+		if moving:
+			move_and_slide()
+			stop_robot_to_boundary()
+			if Global.moving_collide and Global.static_collide:
+				colliding_robot()
 
+# ON MOUSECLICK
+func mouse_click():
+	if Input.is_action_just_pressed("left_click"):
+		var click_position = get_global_mouse_position()
+		var grid_mouse_position = Vector2(int(click_position.x) / 50,int(click_position.y) / 50)
+		clicked_on_robot = (robot_grid_position == grid_mouse_position)
+		if clicked_on_robot:
+			give_control()
+		else:
+			free_control()
+	if Input.is_action_just_pressed("right_click"):
+		free_control()
+
+# AFTER MOUSECLICK WAITING FOR DIRECTION TO GO
 func wait_robot_to_move():
 	if not moving:
 		direction = Vector2.ZERO
@@ -55,8 +76,25 @@ func wait_robot_to_move():
 				
 	else:
 		velocity = direction * speed
-		
-func set_robot_position():
+
+# STOP ROBOT TO WALL BOUNDARY
+func stop_robot_to_boundary():
+	# WALL BOUNDARY
+	if position.x < 0: 
+		global_position.x = 0
+		set_robot_position_after_hitting_wall_()
+	if position.y < 0: 
+		global_position.y = 0
+		set_robot_position_after_hitting_wall_()
+	if position.x > 750: 
+		global_position.x = 750
+		set_robot_position_after_hitting_wall_()
+	if position.y > 750: 
+		global_position.y = 750
+		set_robot_position_after_hitting_wall_()
+
+# REPLACE ROBOT POSITION AFTER HITTING WALL
+func set_robot_position_after_hitting_wall_():
 	velocity = Vector2.ZERO
 	robot_grid_position.x = int(position.x) / 50
 	robot_grid_position.y = int(position.y) / 50
@@ -64,34 +102,7 @@ func set_robot_position():
 	global_position.y = robot_grid_position.y * 50
 	set_global_moving_false()
 
-func stop_robot_to_wall():
-	# WALL BOUNDARY
-	if position.x < 0: 
-		global_position.x = 0
-		set_robot_position()
-	if position.y < 0: 
-		global_position.y = 0
-		set_robot_position()
-	if position.x > 750: 
-		global_position.x = 750
-		set_robot_position()
-	if position.y > 750: 
-		global_position.y = 750
-		set_robot_position()
-
-func mouse_click():
-	if Input.is_action_just_pressed("left_click"):
-		var click_position = get_global_mouse_position()
-		var grid_mouse_position = Vector2(int(click_position.x) / 50,int(click_position.y) / 50)
-		robot_grid_position = Vector2(int(position.x) / 50,	int(position.y) / 50)
-		clicked_on_robot = (robot_grid_position == grid_mouse_position)
-		if clicked_on_robot:
-			give_control()
-		else:
-			free_control()
-	if Input.is_action_just_pressed("right_click"):
-		free_control()
-		
+# GIVE CONTROL OF THE ROBOT THE PLAYER CLICKED ON
 func give_control():
 	var stylebox_flat = StyleBoxFlat.new()
 	stylebox_flat.set_border_width_all(5)
@@ -100,6 +111,7 @@ func give_control():
 	stylebox_flat.bg_color = bg_color
 	panel.add_theme_stylebox_override("panel",stylebox_flat)
 
+# FREE THE CONTROL OF THE ROBOT
 func free_control():
 	clicked_on_robot = false
 	var stylebox_flat = StyleBoxFlat.new()
@@ -108,6 +120,7 @@ func free_control():
 	stylebox_flat.bg_color = bg_color
 	panel.add_theme_stylebox_override("panel",stylebox_flat)
 
+# WHEN A ROBOT IS MOVING EVERY OTHER ROBOT SHOULD BE STATIC
 func set_global_moving():
 	if robot_color == COLOR.RED:
 		Global.red_moving = true
@@ -134,6 +147,7 @@ func set_global_moving():
 		Global.yellow_moving = true
 		moving = Global.yellow_moving
 
+# RELEASE ALL ROBOT TO PERMIT PLAYER TO CLICK AGAIN
 func set_global_moving_false():
 	moving = false
 	Global.red_moving = false
@@ -141,5 +155,33 @@ func set_global_moving_false():
 	Global.green_moving = false
 	Global.yellow_moving = false
 
+# WHEN TWO ROBOT COLLIDE
 func _on_area_2d_area_entered(area):
-	set_robot_position()
+	velocity = Vector2.ZERO
+	# Get position of moving and static robot
+	if moving:
+		Global.moving_robot_position = position
+		Global.moving_collide = true
+	else:
+		Global.static_robot_position = position
+		Global.static_collide = true
+	
+func colliding_robot():
+	Global.moving_collide = false
+	Global.static_collide = false
+	var collide = false
+	if moving and Global.moving_robot_position.y > Global.static_robot_position.y:
+		robot_grid_position.y = (int(Global.static_robot_position.y) / 50) + 1
+		collide = true
+	if not collide and moving and Global.moving_robot_position.y < Global.static_robot_position.y:
+		robot_grid_position.y = (int(Global.static_robot_position.y) / 50) - 1
+		collide = true
+	if not collide and moving and Global.moving_robot_position.x > Global.static_robot_position.x:
+		robot_grid_position.x = (int(Global.static_robot_position.x) / 50) + 1
+		collide = true
+	if not collide and moving and Global.moving_robot_position.x < Global.static_robot_position.x:
+		robot_grid_position.x = (int(Global.static_robot_position.x) / 50) - 1
+		collide = true
+	global_position.x = robot_grid_position.x * 50
+	global_position.y = robot_grid_position.y * 50
+	set_global_moving_false()

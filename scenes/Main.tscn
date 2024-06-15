@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://m8lywpoyi1pw"]
+[gd_scene load_steps=5 format=3 uid="uid://m8lywpoyi1pw"]
 
 [ext_resource type="Texture2D" uid="uid://b8qcorjialy4q" path="res://assets/bg.png" id="1_10lv7"]
 [ext_resource type="PackedScene" uid="uid://bi2kxkqkpx1f8" path="res://scenes/Robot.tscn" id="2_dy510"]
+[ext_resource type="PackedScene" uid="uid://brpfb5gqdqkcw" path="res://scenes/wall.tscn" id="3_1p0ql"]
 
 [sub_resource type="GDScript" id="GDScript_jb15w"]
 script/source = "extends Node
@@ -30,7 +31,7 @@ offset_bottom = 300.0
 position = Vector2(500, 500)
 
 [node name="RED" parent="." instance=ExtResource("2_dy510")]
-position = Vector2(350, 152)
+position = Vector2(350, 150)
 speed = 700
 bg_color = Color(0, 0.7, 0.7, 1)
 border_color = Color(1, 0.3, 0.3, 1)
@@ -56,3 +57,6 @@ speed = 700
 bg_color = Color(0, 0.7, 0.7, 1)
 border_color = Color(1, 0.3, 0.3, 1)
 robot_color = 3
+
+[node name="Wall" parent="." instance=ExtResource("3_1p0ql")]
+position = Vector2(300, 450)
