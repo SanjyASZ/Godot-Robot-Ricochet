@@ -14,6 +14,7 @@ var robot_grid_position = Vector2()
 var moving = false
 var direction = Vector2.ZERO
 var clicked_on_robot = false
+var is_robot_colliding = false
 
 # WHEN GAME START
 func _ready():
@@ -33,7 +34,7 @@ func _ready():
 	robot_grid_position = Vector2(int(position.x) / 50,	int(position.y) / 50)
 
 # GAME LOOP
-func _physics_process(delta):
+func _physics_process(_delta):
 	robot_grid_position = Vector2(int(position.x) / 50,	int(position.y) / 50) 
 	if not moving and not(Global.red_moving or Global.blue_moving or Global.green_moving or Global.yellow_moving):
 		mouse_click()
@@ -42,7 +43,7 @@ func _physics_process(delta):
 		if moving:
 			move_and_slide()
 			stop_robot_to_boundary()
-			if Global.moving_collide and Global.static_collide:
+			if is_robot_colliding and Global.moving_collide and Global.static_collide:
 				colliding_robot()
 
 # ON MOUSECLICK
@@ -96,8 +97,9 @@ func stop_robot_to_boundary():
 # REPLACE ROBOT POSITION AFTER HITTING WALL
 func set_robot_position_after_hitting_wall_():
 	velocity = Vector2.ZERO
-	robot_grid_position.x = int(position.x) / 50
-	robot_grid_position.y = int(position.y) / 50
+	robot_grid_position.x = int(ceil(position.x/10)*10) / 50
+	robot_grid_position.y = int(ceil(position.y/10)*10) /50
+	print("position :", position)
 	global_position.x = robot_grid_position.x * 50
 	global_position.y = robot_grid_position.y * 50
 	set_global_moving_false()
@@ -155,17 +157,7 @@ func set_global_moving_false():
 	Global.green_moving = false
 	Global.yellow_moving = false
 
-# WHEN TWO ROBOT COLLIDE
-func _on_area_2d_area_entered(area):
-	velocity = Vector2.ZERO
-	# Get position of moving and static robot
-	if moving:
-		Global.moving_robot_position = position
-		Global.moving_collide = true
-	else:
-		Global.static_robot_position = position
-		Global.static_collide = true
-	
+# WHEN TWO ROBOTS COLLIDES
 func colliding_robot():
 	Global.moving_collide = false
 	Global.static_collide = false
@@ -184,4 +176,21 @@ func colliding_robot():
 		collide = true
 	global_position.x = robot_grid_position.x * 50
 	global_position.y = robot_grid_position.y * 50
+	is_robot_colliding = false
 	set_global_moving_false()
+
+# DETECT COLLISIONS WALLS OR ROBOTS
+func _on_area_2d_area_entered(area):
+	if area.is_in_group("robots"):
+		velocity = Vector2.ZERO
+		# Get position of moving and static robot
+		if moving:
+			Global.moving_robot_position = position
+			Global.moving_collide = true
+		else:
+			Global.static_robot_position = position
+			Global.static_collide = true
+		is_robot_colliding = true
+	if area.is_in_group("walls"):
+		set_robot_position_after_hitting_wall_()
+		
