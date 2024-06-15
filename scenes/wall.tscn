@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://brpfb5gqdqkcw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v3qih"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="Wall" type="StaticBody2D"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 5.0
+offset_bottom = 50.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_v3qih")

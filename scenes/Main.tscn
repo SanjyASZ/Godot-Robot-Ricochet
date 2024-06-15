@@ -29,4 +29,30 @@ offset_bottom = 300.0
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(500, 500)
 
-[node name="Robot" parent="." instance=ExtResource("2_dy510")]
+[node name="RED" parent="." instance=ExtResource("2_dy510")]
+position = Vector2(350, 152)
+speed = 700
+bg_color = Color(0, 0.7, 0.7, 1)
+border_color = Color(1, 0.3, 0.3, 1)
+robot_color = 0
+
+[node name="BLUE" parent="." instance=ExtResource("2_dy510")]
+position = Vector2(350, 300)
+speed = 700
+bg_color = Color(0, 0.7, 0.7, 1)
+border_color = Color(1, 0.3, 0.3, 1)
+robot_color = 1
+
+[node name="GREEN" parent="." instance=ExtResource("2_dy510")]
+position = Vector2(100, 200)
+speed = 700
+bg_color = Color(0, 0.7, 0.7, 1)
+border_color = Color(1, 0.3, 0.3, 1)
+robot_color = 2
+
+[node name="YELLOW" parent="." instance=ExtResource("2_dy510")]
+position = Vector2(150, 550)
+speed = 700
+bg_color = Color(0, 0.7, 0.7, 1)
+border_color = Color(1, 0.3, 0.3, 1)
+robot_color = 3
