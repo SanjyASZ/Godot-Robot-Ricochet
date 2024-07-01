@@ -83,26 +83,52 @@ func stop_robot_to_boundary():
 	# WALL BOUNDARY
 	if position.x < 0: 
 		global_position.x = 0
-		set_robot_position_after_hitting_wall_()
+		set_robot_position_after_hitting_wall()
 	if position.y < 0: 
 		global_position.y = 0
-		set_robot_position_after_hitting_wall_()
+		set_robot_position_after_hitting_wall()
 	if position.x > 750: 
 		global_position.x = 750
-		set_robot_position_after_hitting_wall_()
+		set_robot_position_after_hitting_wall()
 	if position.y > 750: 
 		global_position.y = 750
-		set_robot_position_after_hitting_wall_()
+		set_robot_position_after_hitting_wall()
 
 # REPLACE ROBOT POSITION AFTER HITTING WALL
-func set_robot_position_after_hitting_wall_():
+func set_robot_position_after_hitting_wall():
 	velocity = Vector2.ZERO
 	robot_grid_position.x = int(ceil(position.x/10)*10) / 50
-	robot_grid_position.y = int(ceil(position.y/10)*10) /50
-	print("position :", position)
+	robot_grid_position.y = int(ceil(position.y/10)*10) / 50
 	global_position.x = robot_grid_position.x * 50
 	global_position.y = robot_grid_position.y * 50
 	set_global_moving_false()
+
+func isInteger(N):
+	# Convert float value
+	# of N to integer
+	var X = int(N)
+	var temp2 = N - X
+	# If N is not equivalent
+	# to any integer
+	if (temp2 > 0):
+		return false
+	return true
+ 
+func set_robot_position_after_hitting_robot():
+	if not isInteger(global_position.x) or not isInteger(global_position.y):
+		
+		velocity = Vector2.ZERO
+		if direction == Vector2.LEFT:
+			robot_grid_position.x = (int(ceil(position.x/10)*10) / 50) +1
+		else:
+			robot_grid_position.x = (int(ceil(position.x/10)*10) / 50) 
+		if direction == Vector2.UP:
+			robot_grid_position.y = (int(ceil(position.y/10)*10) / 50) + 1
+		else:
+			robot_grid_position.y = (int(ceil(position.y/10)*10) / 50)
+		global_position.x = robot_grid_position.x * 50
+		global_position.y = robot_grid_position.y * 50
+		set_global_moving_false()
 
 # GIVE CONTROL OF THE ROBOT THE PLAYER CLICKED ON
 func give_control():
@@ -182,15 +208,9 @@ func colliding_robot():
 # DETECT COLLISIONS WALLS OR ROBOTS
 func _on_area_2d_area_entered(area):
 	if area.is_in_group("robots"):
-		velocity = Vector2.ZERO
-		# Get position of moving and static robot
-		if moving:
-			Global.moving_robot_position = position
-			Global.moving_collide = true
-		else:
-			Global.static_robot_position = position
-			Global.static_collide = true
-		is_robot_colliding = true
+		set_robot_position_after_hitting_robot()
 	if area.is_in_group("walls"):
-		set_robot_position_after_hitting_wall_()
+		set_robot_position_after_hitting_wall()
+	if area.is_in_group("target"):
+		print("GG")
 		

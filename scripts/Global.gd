@@ -13,3 +13,4 @@ var moving_robot_position = Vector2.ZERO
 # Boolean to know when collision is done
 var moving_collide = false
 var static_collide= false
+

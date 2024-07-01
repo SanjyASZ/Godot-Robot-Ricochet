@@ -33,7 +33,7 @@ metadata/_edit_use_anchors_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(25, 25)
-scale = Vector2(2, 2.415)
+scale = Vector2(1.987, 2.4)
 shape = SubResource("RectangleShape2D_ka8ga")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
