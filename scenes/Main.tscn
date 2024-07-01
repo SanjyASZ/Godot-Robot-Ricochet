@@ -21,18 +21,23 @@ func instanciate_wall(x,y,south) -> void:
 		wall.set_rotation(deg_to_rad(-90))
 		add_child(wall)
 
-func instanciate_robot(x,y,color) -> void:
+func instanciate_robot(x,y,color,grid):
 	var robot = ROBOT.instantiate()
 	robot.set_position(Vector2(x*50,y*50))
 	if color == \"RED\":
 		robot.robot_color = robot.COLOR.RED
+		grid[y][x] += \"R\"
 	elif color == \"BLUE\":
 		robot.robot_color = robot.COLOR.BLUE
+		grid[y][x] += \"B\"
 	elif color == \"GREEN\":
 		robot.robot_color = robot.COLOR.GREEN
+		grid[y][x] += \"G\"
 	else:
 		robot.robot_color = robot.COLOR.YELLOW
+		grid[y][x] += \"Y\"
 	add_child(robot)
+	return grid
 
 func create_grid():
 	var grid = []
@@ -73,11 +78,12 @@ func _ready() -> void:
 			if \"1\" in grid[y][x]:
 				if y != 0:
 					instanciate_wall(x,y,false)
-
-	instanciate_robot(7,3,\"RED\")
-	instanciate_robot(2,4,\"GREEN\")
-	instanciate_robot(7,6,\"BLUE\")
-	instanciate_robot(3,11,\"YELLOW\")
+	instanciate_robot(7,3,\"RED\",grid)
+	instanciate_robot(2,4,\"GREEN\",grid)
+	instanciate_robot(7,6,\"BLUE\",grid)
+	instanciate_robot(3,11,\"YELLOW\",grid)
+	
+	print(grid)
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqckr"]
