@@ -21,4 +21,4 @@ var moving_collide = false
 var static_collide= false
 
 # Structure to store all combination and find the solution
-var noeud_rac = []
+var noeud_rac = TreeNode.new("0","0")

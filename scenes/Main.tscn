@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://m8lywpoyi1pw"]
+[gd_scene load_steps=7 format=3 uid="uid://m8lywpoyi1pw"]
 
 [ext_resource type="Texture2D" uid="uid://b8qcorjialy4q" path="res://assets/bg.png" id="1_10lv7"]
 [ext_resource type="PackedScene" uid="uid://brpfb5gqdqkcw" path="res://scenes/wall.tscn" id="3_1p0ql"]
 [ext_resource type="Texture2D" uid="uid://dyne4c40xkco6" path="res://assets/linux_logo_icon_168243.png" id="4_4yeak"]
-[ext_resource type="PackedScene" uid="uid://fr0y3hfol1n5" path="res://scenes/target.tscn" id="5_cvlo6"]
 
 [sub_resource type="GDScript" id="GDScript_jb15w"]
 script/source = "extends Node
@@ -13,6 +12,7 @@ var size_grid = 15
 @onready var Wall = preload(\"res://scenes/wall.tscn\")
 @onready var ROBOT = preload(\"res://scenes/Robot.tscn\")
 @onready var CHECKER = preload(\"res://scenes/checker.tscn\")
+@onready var TARGET = preload(\"res://scenes/target.tscn\")
 
 func instanciate_wall(x,y,south) -> void:
 	var wall = Wall.instantiate()
@@ -23,6 +23,12 @@ func instanciate_wall(x,y,south) -> void:
 		wall.set_position(Vector2(x*50,y*50+2))
 		wall.set_rotation(deg_to_rad(-90))
 		add_child(wall)
+
+func instanciate_target(x,y,grid):
+	var target = TARGET.instantiate()
+	target.set_position(Vector2(x*50,y*50))
+	grid[y][x] = grid[y][x] + \"T\"
+	add_child(target)
 
 func instanciate_robot(x,y,color,grid):
 	var robot = ROBOT.instantiate()
@@ -44,7 +50,6 @@ func instanciate_robot(x,y,color,grid):
 		grid[y][x] += \"Y\"
 		Global.yellow_position = Vector2(x,y)
 	add_child(robot)
-	return grid
 
 func create_grid():
 	var grid = []
@@ -170,19 +175,16 @@ func _ready() -> void:
 	instanciate_robot(2,4,\"GREEN\",grid)
 	instanciate_robot(7,6,\"BLUE\",grid)
 	instanciate_robot(3,11,\"YELLOW\",grid)
+	instanciate_target(12,13,grid)
 	
-	# Test combination
-	print(grid)
-	print(Global.red_position)
-	move_robot(\"right\",\"red\",grid)
-	print(Global.red_position)
-	print(grid)
-	move_robot(\"left\",\"red\",grid)
-	print(Global.red_position)
-	print(grid)
-	move_robot(\"down\",\"red\",grid)
-	print(Global.red_position)
-	print(grid)
+	Global.noeud_rac.add_4_robot_4_move(Global.noeud_rac)
+	for node in Global.noeud_rac.children:
+		Global.noeud_rac.add_4_robot_4_move(node)
+		for sub_node in node.children:
+				Global.noeud_rac.add_4_robot_4_move(sub_node)
+			
+	Global.noeud_rac.recursive_bfs(Global.noeud_rac)
+	Global.noeud_rac.parcours(Global.noeud_rac)
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqckr"]
@@ -261,6 +263,3 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_hqckr")
 offset_left = -200.0
 offset_bottom = 800.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_g1sig")
-
-[node name="StaticBody2D" parent="." instance=ExtResource("5_cvlo6")]
-position = Vector2(600, 650)

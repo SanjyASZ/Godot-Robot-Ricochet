@@ -6,7 +6,7 @@ bg_color = Color(0.2, 0.8, 0.2, 0.89)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_poo6k"]
 size = Vector2(25, 25.5)
 
-[node name="Node2D" type="Area2D"]
+[node name="Target" type="Area2D"]
 
 [node name="Panel" type="Panel" parent="."]
 offset_right = 50.0
