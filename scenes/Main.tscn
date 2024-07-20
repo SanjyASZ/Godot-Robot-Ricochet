@@ -161,9 +161,8 @@ func solve_with_recursive_bfs(node: TreeNode,grid):
 	
 func try_move(node: TreeNode, grid):
 	var i=0
-	var continue_try_move = true
 	var new_grid = grid.duplicate(true)
-	while i < node.solution.length() and continue_try_move :
+	while i < node.solution.length():
 		if node.solution[i] == \"R\":
 			if node.solution[i+1] == \"U\":
 				move_red_robot(\"up\",new_grid)
@@ -202,6 +201,105 @@ func try_move(node: TreeNode, grid):
 				move_yellow_robot(\"left\",new_grid)
 		i += 2
 
+func check_move(the_move,grid) -> bool:
+	var new_grid = grid.duplicate(true)
+	var node = TreeNode.new(\"0\",\"0\",the_move)
+	# CHECK RED
+	if the_move[0] == \"R\":
+		var red_position_before = Global.red_position
+		try_move(node,new_grid)
+		if red_position_before == Global.red_position:
+			return false
+		else:
+			Global.red_position = red_position_before
+			return true
+	# CHECK BLUE
+	elif the_move[0] == \"B\":
+		var blue_position_before = Global.blue_position
+		try_move(node,new_grid)
+		if blue_position_before == Global.blue_position:
+			return false
+		else:
+			Global.blue_position = blue_position_before
+			return true
+	# CHECK GREEN
+	elif the_move[0] == \"G\":
+		var green_position_before = Global.green_position
+		try_move(node,new_grid)
+		if green_position_before == Global.green_position:
+			return false
+		else:
+			Global.green_position = green_position_before
+			return true
+	# CHECK YELLOW
+	elif the_move[0] == \"Y\":
+		var yellow_position_before = Global.yellow_position
+		try_move(node,new_grid)
+		if yellow_position_before == Global.yellow_position:
+			return false
+		else:
+			Global.yellow_position = yellow_position_before
+			return true
+	else:
+		return false
+
+func add_children_for_node(noeud_rac: TreeNode,grid):
+	# CHECK ALL MOVE RED 
+	if check_move(\"RU\",grid):
+		var node = TreeNode.new(\"R\",\"U\")
+		noeud_rac.children.append(node)
+	if check_move(\"RR\",grid):
+		var node = TreeNode.new(\"R\",\"R\")
+		noeud_rac.children.append(node)
+	if check_move(\"RD\",grid):
+		var node = TreeNode.new(\"R\",\"D\")
+		noeud_rac.children.append(node)
+	if check_move(\"RL\",grid):
+		var node = TreeNode.new(\"R\",\"L\")
+		noeud_rac.children.append(node)
+		
+	# CHECK ALL MOVE GREEN 
+	if check_move(\"GU\",grid):
+		var node = TreeNode.new(\"G\",\"U\")
+		noeud_rac.children.append(node)
+	if check_move(\"GR\",grid):
+		var node = TreeNode.new(\"G\",\"R\")
+		noeud_rac.children.append(node)
+	if check_move(\"GD\",grid):
+		var node = TreeNode.new(\"G\",\"D\")
+		noeud_rac.children.append(node)
+	if check_move(\"GL\",grid):
+		var node = TreeNode.new(\"G\",\"L\")
+		noeud_rac.children.append(node)
+		
+	# CHECK ALL MOVE BLUE 
+	if check_move(\"BU\",grid):
+		var node = TreeNode.new(\"B\",\"U\")
+		noeud_rac.children.append(node)
+	if check_move(\"BR\",grid):
+		var node = TreeNode.new(\"B\",\"R\")
+		noeud_rac.children.append(node)
+	if check_move(\"BD\",grid):
+		var node = TreeNode.new(\"B\",\"D\")
+		noeud_rac.children.append(node)
+	if check_move(\"BL\",grid):
+		var node = TreeNode.new(\"B\",\"L\")
+		noeud_rac.children.append(node)
+		
+	# CHECK ALL MOVE YELLOW 
+	if check_move(\"YU\",grid):
+		var node = TreeNode.new(\"Y\",\"U\")
+		noeud_rac.children.append(node)
+	if check_move(\"YR\",grid):
+		var node = TreeNode.new(\"R\",\"R\")
+		noeud_rac.children.append(node)
+	if check_move(\"YD\",grid):
+		var node = TreeNode.new(\"Y\",\"D\")
+		noeud_rac.children.append(node)
+	if check_move(\"YL\",grid):
+		var node = TreeNode.new(\"Y\",\"L\")
+		noeud_rac.children.append(node)
+	
 func _ready() -> void:
 	var grid = create_grid()
 	grid = [ 
@@ -242,13 +340,25 @@ func _ready() -> void:
 	instanciate_robot(3,11,\"YELLOW\",grid)
 	instanciate_target(Global.target_position.x,Global.target_position.y,grid)
 	
-	Global.noeud_rac.add_4_robot_4_move(Global.noeud_rac)
+	# CREATE ALL POSSIBILITIES WITH 4 SOLUTION DEPTH
+	#Global.noeud_rac.add_4_robot_4_move(Global.noeud_rac)
+	#for node in Global.noeud_rac.children:
+		#Global.noeud_rac.add_4_robot_4_move(node)
+		#for sub_node in Global.noeud_rac.children:
+			#Global.noeud_rac.add_4_robot_4_move(sub_node)
+			#for sub_sub_node in Global.noeud_rac.children:
+				#Global.noeud_rac.add_4_robot_4_move(sub_sub_node)
+				
+	# CREATE TREE WITH DESIRED DEPTH
+	add_children_for_node(Global.noeud_rac,grid)
 	for node in Global.noeud_rac.children:
-		Global.noeud_rac.add_4_robot_4_move(node)
-		for sub_node in Global.noeud_rac.children:
-			Global.noeud_rac.add_4_robot_4_move(sub_node)
-	
+		add_children_for_node(node,grid)
+		#for sub_node in Global.noeud_rac.children:
+			#add_children_for_node(sub_node,grid)
+	#
 	solve_with_recursive_bfs(Global.noeud_rac,grid)
+	print(\"Solution non trouvée\")
+	print(check_move(\"GL\",grid))
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqckr"]

@@ -43,6 +43,6 @@ func parcours(start_node: TreeNode):
 	print("PASSE") # LAS
 	while queue.size() > 0:
 		var current = queue.pop_front()
-		print(current.solution) # LAS
+		print("node:", current.color, current.move) # LAS
 		for child in current.children:
 			queue.push_back(child)
