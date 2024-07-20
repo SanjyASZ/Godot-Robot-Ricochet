@@ -62,69 +62,65 @@ func create_grid():
 func move_red_robot(direction,grid):
 	grid[Global.red_position.y][Global.red_position.x] = grid[Global.red_position.y][Global.red_position.x].left(grid[Global.red_position.y][Global.red_position.x].length()-1)
 	if direction == \"right\":
-		while \"G\" not in grid[Global.red_position.y][Global.red_position.x + 1] and \"B\" not in grid[Global.red_position.y][Global.red_position.x + 1] and \"Y\" not in grid[Global.red_position.y][Global.red_position.x + 1] and (not (\"2\" in grid[Global.red_position.y][Global.red_position.x])) and Global.red_position.x <= size_grid:
+		while Global.red_position.x != size_grid and \"G\" not in grid[Global.red_position.y][Global.red_position.x + 1] and \"B\" not in grid[Global.red_position.y][Global.red_position.x + 1] and \"Y\" not in grid[Global.red_position.y][Global.red_position.x + 1] and (not (\"2\" in grid[Global.red_position.y][Global.red_position.x])):
 			Global.red_position.x += 1
 	if direction == \"left\":
-		while \"G\" not in grid[Global.red_position.y][Global.red_position.x - 1] and \"B\" not in grid[Global.red_position.y][Global.red_position.x - 1] and \"Y\" not in grid[Global.red_position.y][Global.red_position.x - 1] and (not (\"0\" in grid[Global.red_position.y][Global.red_position.x])) and Global.red_position.x <= size_grid:
+		while Global.red_position.x != 0 and \"G\" not in grid[Global.red_position.y][Global.red_position.x - 1] and \"B\" not in grid[Global.red_position.y][Global.red_position.x - 1] and \"Y\" not in grid[Global.red_position.y][Global.red_position.x - 1] and (not (\"0\" in grid[Global.red_position.y][Global.red_position.x])):
 			Global.red_position.x -= 1
 	if direction == \"up\":
-		while \"G\" not in grid[Global.red_position.y -1 ][Global.red_position.x] and \"B\" not in grid[Global.red_position.y -1][Global.red_position.x] and \"Y\" not in grid[Global.red_position.y-1][Global.red_position.x] and (not (\"1\" in grid[Global.red_position.y][Global.red_position.x])) and Global.red_position.x <= size_grid:
+		while Global.red_position.y != 0 and  \"G\" not in grid[Global.red_position.y -1 ][Global.red_position.x] and \"B\" not in grid[Global.red_position.y -1][Global.red_position.x] and \"Y\" not in grid[Global.red_position.y-1][Global.red_position.x] and (not (\"1\" in grid[Global.red_position.y][Global.red_position.x])):
 			Global.red_position.y -= 1
 	if direction == \"down\":
-		while \"G\" not in grid[Global.red_position.y +1 ][Global.red_position.x] and \"B\" not in grid[Global.red_position.y +1][Global.red_position.x] and \"Y\" not in grid[Global.red_position.y+1][Global.red_position.x] and (not (\"3\" in grid[Global.red_position.y][Global.red_position.x])) and Global.red_position.x <= size_grid:
+		while Global.red_position.y != size_grid and  \"G\" not in grid[Global.red_position.y +1 ][Global.red_position.x] and \"B\" not in grid[Global.red_position.y +1][Global.red_position.x] and \"Y\" not in grid[Global.red_position.y+1][Global.red_position.x] and (not (\"3\" in grid[Global.red_position.y][Global.red_position.x])):
 			Global.red_position.y += 1
-			print(grid[Global.red_position.y][Global.red_position.x])
 	grid[Global.red_position.y][Global.red_position.x] += \"R\"
 
 func move_blue_robot(direction,grid):
 	grid[Global.blue_position.y][Global.blue_position.x] = grid[Global.blue_position.y][Global.blue_position.x].left(grid[Global.blue_position.y][Global.blue_position.x].length()-1)
 	if direction == \"right\":
-		while \"G\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and \"R\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and \"Y\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and (not (\"2\" in grid[Global.blue_position.y][Global.blue_position.x])) and Global.blue_position.x <= size_grid:
+		while Global.blue_position.x != size_grid and \"G\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and \"R\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and \"Y\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and (not (\"2\" in grid[Global.blue_position.y][Global.blue_position.x])):
 			Global.blue_position.x += 1
 	if direction == \"left\":
-		while \"G\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and \"R\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and \"Y\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and (not (\"0\" in grid[Global.blue_position.y][Global.blue_position.x])) and Global.blue_position.x <= size_grid:
+		while Global.blue_position.x != 0 and \"G\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and \"R\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and \"Y\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and (not (\"0\" in grid[Global.blue_position.y][Global.blue_position.x])):
 			Global.blue_position.x -= 1
 	if direction == \"up\":
-		while \"G\" not in grid[Global.blue_position.y -1 ][Global.blue_position.x] and \"R\" not in grid[Global.blue_position.y -1][Global.blue_position.x] and \"Y\" not in grid[Global.blue_position.y-1][Global.blue_position.x] and (not (\"1\" in grid[Global.blue_position.y][Global.blue_position.x])) and Global.blue_position.x <= size_grid:
+		while Global.blue_position.y != 0 and \"G\" not in grid[Global.blue_position.y -1 ][Global.blue_position.x] and \"R\" not in grid[Global.blue_position.y -1][Global.blue_position.x] and \"Y\" not in grid[Global.blue_position.y-1][Global.blue_position.x] and (not (\"1\" in grid[Global.blue_position.y][Global.blue_position.x])):
 			Global.blue_position.y -= 1
 	if direction == \"down\":
-		while \"G\" not in grid[Global.blue_position.y +1 ][Global.blue_position.x] and \"R\" not in grid[Global.blue_position.y +1][Global.blue_position.x] and \"Y\" not in grid[Global.blue_position.y+1][Global.blue_position.x] and (not (\"3\" in grid[Global.blue_position.y][Global.blue_position.x])) and Global.blue_position.x <= size_grid:
+		while Global.blue_position.y != size_grid and \"G\" not in grid[Global.blue_position.y +1 ][Global.blue_position.x] and \"R\" not in grid[Global.blue_position.y +1][Global.blue_position.x] and \"Y\" not in grid[Global.blue_position.y+1][Global.blue_position.x] and (not (\"3\" in grid[Global.blue_position.y][Global.blue_position.x])):
 			Global.blue_position.y += 1
-			print(grid[Global.blue_position.y][Global.blue_position.x])
 	grid[Global.blue_position.y][Global.blue_position.x] += \"B\"
 
 func move_green_robot(direction,grid):
 	grid[Global.green_position.y][Global.green_position.x] = grid[Global.green_position.y][Global.green_position.x].left(grid[Global.green_position.y][Global.green_position.x].length()-1)
 	if direction == \"right\":
-		while \"B\" not in grid[Global.green_position.y][Global.green_position.x + 1] and \"R\" not in grid[Global.green_position.y][Global.green_position.x + 1] and \"Y\" not in grid[Global.green_position.y][Global.green_position.x + 1] and (not (\"2\" in grid[Global.green_position.y][Global.green_position.x])) and Global.green_position.x <= size_grid:
+		while Global.green_position.x != size_grid and \"B\" not in grid[Global.green_position.y][Global.green_position.x + 1] and \"R\" not in grid[Global.green_position.y][Global.green_position.x + 1] and \"Y\" not in grid[Global.green_position.y][Global.green_position.x + 1] and (not (\"2\" in grid[Global.green_position.y][Global.green_position.x])):
 			Global.green_position.x += 1
 	if direction == \"left\":
-		while \"B\" not in grid[Global.green_position.y][Global.green_position.x - 1] and \"R\" not in grid[Global.green_position.y][Global.green_position.x - 1] and \"Y\" not in grid[Global.green_position.y][Global.green_position.x - 1] and (not (\"0\" in grid[Global.green_position.y][Global.green_position.x])) and Global.green_position.x <= size_grid:
+		while Global.green_position.x != 0 and \"B\" not in grid[Global.green_position.y][Global.green_position.x - 1] and \"R\" not in grid[Global.green_position.y][Global.green_position.x - 1] and \"Y\" not in grid[Global.green_position.y][Global.green_position.x - 1] and (not (\"0\" in grid[Global.green_position.y][Global.green_position.x])):
 			Global.green_position.x -= 1
 	if direction == \"up\":
-		while \"B\" not in grid[Global.green_position.y -1 ][Global.green_position.x] and \"R\" not in grid[Global.green_position.y -1][Global.green_position.x] and \"Y\" not in grid[Global.green_position.y-1][Global.green_position.x] and (not (\"1\" in grid[Global.green_position.y][Global.green_position.x])) and Global.green_position.x <= size_grid:
+		while Global.green_position.y != 0 and \"B\" not in grid[Global.green_position.y -1 ][Global.green_position.x] and \"R\" not in grid[Global.green_position.y -1][Global.green_position.x] and \"Y\" not in grid[Global.green_position.y-1][Global.green_position.x] and (not (\"1\" in grid[Global.green_position.y][Global.green_position.x])):
 			Global.green_position.y -= 1
 	if direction == \"down\":
-		while \"B\" not in grid[Global.green_position.y +1 ][Global.green_position.x] and \"R\" not in grid[Global.green_position.y +1][Global.green_position.x] and \"Y\" not in grid[Global.green_position.y+1][Global.green_position.x] and (not (\"3\" in grid[Global.green_position.y][Global.green_position.x])) and Global.green_position.x <= size_grid:
+		while Global.green_position.y != size_grid and \"B\" not in grid[Global.green_position.y +1 ][Global.green_position.x] and \"R\" not in grid[Global.green_position.y +1][Global.green_position.x] and \"Y\" not in grid[Global.green_position.y+1][Global.green_position.x] and (not (\"3\" in grid[Global.green_position.y][Global.green_position.x])):
 			Global.green_position.y += 1
-			print(grid[Global.green_position.y][Global.green_position.x])
 	grid[Global.green_position.y][Global.green_position.x] += \"G\"
 
 func move_yellow_robot(direction,grid):
 	grid[Global.yellow_position.y][Global.yellow_position.x] = grid[Global.yellow_position.y][Global.yellow_position.x].left(grid[Global.yellow_position.y][Global.yellow_position.x].length()-1)
 	if direction == \"right\":
-		while \"B\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and \"R\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and \"G\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and (not (\"2\" in grid[Global.yellow_position.y][Global.yellow_position.x])) and Global.yellow_position.x <= size_grid:
+		while Global.yellow_position.x != size_grid and \"B\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and \"R\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and \"G\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and (not (\"2\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
 			Global.yellow_position.x += 1
 	if direction == \"left\":
-		while \"B\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and \"R\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and \"G\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and (not (\"0\" in grid[Global.yellow_position.y][Global.yellow_position.x])) and Global.yellow_position.x <= size_grid:
+		while Global.yellow_position.x != 0 and \"B\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and \"R\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and \"G\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and (not (\"0\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
 			Global.yellow_position.x -= 1
 	if direction == \"up\":
-		while \"B\" not in grid[Global.yellow_position.y -1 ][Global.yellow_position.x] and \"R\" not in grid[Global.yellow_position.y -1][Global.yellow_position.x] and \"G\" not in grid[Global.yellow_position.y-1][Global.yellow_position.x] and (not (\"1\" in grid[Global.yellow_position.y][Global.yellow_position.x])) and Global.yellow_position.x <= size_grid:
+		while Global.yellow_position.y != 0 and \"B\" not in grid[Global.yellow_position.y -1 ][Global.yellow_position.x] and \"R\" not in grid[Global.yellow_position.y -1][Global.yellow_position.x] and \"G\" not in grid[Global.yellow_position.y-1][Global.yellow_position.x] and (not (\"1\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
 			Global.yellow_position.y -= 1
 	if direction == \"down\":
-		while \"B\" not in grid[Global.yellow_position.y +1 ][Global.yellow_position.x] and \"R\" not in grid[Global.yellow_position.y +1][Global.yellow_position.x] and \"G\" not in grid[Global.yellow_position.y+1][Global.yellow_position.x] and (not (\"3\" in grid[Global.yellow_position.y][Global.yellow_position.x])) and Global.yellow_position.x <= size_grid:
+		while Global.yellow_position.y != size_grid and \"B\" not in grid[Global.yellow_position.y +1 ][Global.yellow_position.x] and \"R\" not in grid[Global.yellow_position.y +1][Global.yellow_position.x] and \"G\" not in grid[Global.yellow_position.y+1][Global.yellow_position.x] and (not (\"3\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
 			Global.yellow_position.y += 1
-			print(grid[Global.yellow_position.y][Global.yellow_position.x])
 	grid[Global.yellow_position.y][Global.yellow_position.x] += \"Y\"
 
 func move_robot(direction,color,grid):
@@ -137,6 +133,76 @@ func move_robot(direction,color,grid):
 	elif color == \"yellow\":
 		move_red_robot(direction,grid)
 
+func solve_with_recursive_bfs(node: TreeNode,grid, solution_find: bool):
+	if node.color != \"0\":
+		print(\"RECURSION\") # LAS
+		node.solution = node.solution + node.color + node.move
+		var red_position_before = Global.red_position
+		var blue_position_before = Global.blue_position
+		var green_position_before = Global.green_position
+		var yellow_position_before = Global.yellow_position
+		print(Global.green_position) # LAS
+		try_move(node,grid)
+		print(Global.green_position) # LAS
+		if Global.green_position == Global.target_position:
+			solution_find=true
+			print(\"SOLUTION TROUVEE: \", node.solution)
+		Global.red_position = red_position_before 
+		Global.blue_position = blue_position_before 
+		Global.green_position = green_position_before 
+		Global.yellow_position = yellow_position_before
+	elif node.children.size() == 0:
+		return 
+	elif not solution_find:
+		for child in node.children:
+			if node.color != \"0\":
+				child.solution = node.solution + node.color + node.move	
+			solve_with_recursive_bfs(child,grid,solution_find)
+	elif solution_find:
+		return 
+		
+func try_move(node: TreeNode, grid):
+	var i=0
+	var new_grid = grid.map( func(x): return x.duplicate() )
+	while i < node.solution.length():
+		if node.solution[i] == \"R\":
+			if node.solution[i+1] == \"U\":
+				move_red_robot(\"up\",new_grid)
+			elif node.solution[i+1] == \"R\":
+				move_red_robot(\"right\",new_grid)
+			elif node.solution[i+1] == \"D\":
+				move_red_robot(\"down\",new_grid)
+			elif node.solution[i+1] == \"L\":
+				move_red_robot(\"left\",new_grid)
+		elif node.solution[i] == \"G\":
+			if node.solution[i+1] == \"U\":
+				move_green_robot(\"up\",new_grid)
+			elif node.solution[i+1] == \"R\":
+				move_green_robot(\"right\",new_grid)
+			elif node.solution[i+1] == \"D\":
+				move_green_robot(\"down\",new_grid)
+			elif node.solution[i+1] == \"L\":
+				move_green_robot(\"left\",new_grid)
+		elif node.solution[i] == \"B\":
+			if node.solution[i+1] == \"U\":
+				move_blue_robot(\"up\",new_grid)
+			elif node.solution[i+1] == \"R\":
+				move_blue_robot(\"right\",new_grid)
+			elif node.solution[i+1] == \"D\":
+				move_blue_robot(\"down\",new_grid)
+			elif node.solution[i+1] == \"L\":
+				move_blue_robot(\"left\",new_grid)
+		elif node.solution[i] == \"Y\":
+			if node.solution[i+1] == \"U\":
+				move_yellow_robot(\"up\",new_grid)
+			elif node.solution[i+1] == \"R\":
+				move_yellow_robot(\"right\",new_grid)
+			elif node.solution[i+1] == \"D\":
+				move_yellow_robot(\"down\",new_grid)
+			elif node.solution[i+1] == \"L\":
+				move_yellow_robot(\"left\",new_grid)
+		i += 2
+	
 func _ready() -> void:
 	var grid = create_grid()
 	grid = [ 
@@ -172,19 +238,18 @@ func _ready() -> void:
 	
 	# Instanciate all robots
 	instanciate_robot(7,3,\"RED\",grid)
-	instanciate_robot(2,4,\"GREEN\",grid)
+	instanciate_robot(15,0,\"GREEN\",grid)
 	instanciate_robot(7,6,\"BLUE\",grid)
 	instanciate_robot(3,11,\"YELLOW\",grid)
-	instanciate_target(12,13,grid)
+	instanciate_target(Global.target_position.x,Global.target_position.y,grid)
 	
 	Global.noeud_rac.add_4_robot_4_move(Global.noeud_rac)
-	for node in Global.noeud_rac.children:
-		Global.noeud_rac.add_4_robot_4_move(node)
-		for sub_node in node.children:
-				Global.noeud_rac.add_4_robot_4_move(sub_node)
-			
-	Global.noeud_rac.recursive_bfs(Global.noeud_rac)
+	
+	var solution_find = false
+	var new_grid= []
 	Global.noeud_rac.parcours(Global.noeud_rac)
+	print(solve_with_recursive_bfs(Global.noeud_rac,grid,solution_find))
+	
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqckr"]

@@ -6,9 +6,10 @@ var explored = false
 var solution = ""
 var children = []
 
-func _init(_color,_move):
+func _init(_color,_move,_solution: String = ""):
 	color = _color
 	move = _move
+	self.solution = _solution
 
 func add_node_child(child: TreeNode):
 	children.append(child)
@@ -35,25 +36,13 @@ func add_4_robot_4_move(tree: TreeNode):
 	tree.children.append(TreeNode.new("Y","D"))
 	tree.children.append(TreeNode.new("Y","L"))
 	
-func recursive_bfs(node: TreeNode):
-	if node.color != "0":
-		node.solution = node.solution + node.color + node.move
-	if node.children.size() == 0:
-		return
-	else:
-		for child in node.children:
-			child.solution = node.solution + node.color + node.move
-			recursive_bfs(child)
-	
+
 func parcours(start_node: TreeNode):
 	var queue = []
 	queue.push_back(start_node)
-	
+	print("PASSE") # LAS
 	while queue.size() > 0:
 		var current = queue.pop_front()
-		if current.solution.length() > 10:
-			print("Solution : ", current.solution)
-		
+		print(current.solution) # LAS
 		for child in current.children:
 			queue.push_back(child)
-

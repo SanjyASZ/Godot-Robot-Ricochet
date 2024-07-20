@@ -20,5 +20,8 @@ var moving_robot_position = Vector2.ZERO
 var moving_collide = false
 var static_collide= false
 
+# Target Position
+var target_position = Vector2(12,13)
+
 # Structure to store all combination and find the solution
 var noeud_rac = TreeNode.new("0","0")
