@@ -133,38 +133,37 @@ func move_robot(direction,color,grid):
 	elif color == \"yellow\":
 		move_red_robot(direction,grid)
 
-func solve_with_recursive_bfs(node: TreeNode,grid, solution_find: bool):
-	if node.color != \"0\":
-		print(\"RECURSION\") # LAS
+func solve_with_recursive_bfs(node: TreeNode,grid):
+	if node.color != \"0\" and not Global.solution_found:
 		node.solution = node.solution + node.color + node.move
 		var red_position_before = Global.red_position
 		var blue_position_before = Global.blue_position
 		var green_position_before = Global.green_position
 		var yellow_position_before = Global.yellow_position
-		print(Global.green_position) # LAS
 		try_move(node,grid)
-		print(Global.green_position) # LAS
 		if Global.green_position == Global.target_position:
-			solution_find=true
+			Global.solution_found=true
 			print(\"SOLUTION TROUVEE: \", node.solution)
+			Global.solution = node.solution
 		Global.red_position = red_position_before 
 		Global.blue_position = blue_position_before 
 		Global.green_position = green_position_before 
 		Global.yellow_position = yellow_position_before
-	elif node.children.size() == 0:
+	if node.children.size() == 0 and not Global.solution_found:
 		return 
-	elif not solution_find:
+	elif not Global.solution_found:
 		for child in node.children:
 			if node.color != \"0\":
-				child.solution = node.solution + node.color + node.move	
-			solve_with_recursive_bfs(child,grid,solution_find)
-	elif solution_find:
+				child.solution = node.solution + node.color + node.move
+			solve_with_recursive_bfs(child,grid)
+	if Global.solution_found:
 		return 
-		
+	
 func try_move(node: TreeNode, grid):
 	var i=0
-	var new_grid = grid.map( func(x): return x.duplicate() )
-	while i < node.solution.length():
+	var continue_try_move = true
+	var new_grid = grid.duplicate(true)
+	while i < node.solution.length() and continue_try_move :
 		if node.solution[i] == \"R\":
 			if node.solution[i+1] == \"U\":
 				move_red_robot(\"up\",new_grid)
@@ -202,7 +201,7 @@ func try_move(node: TreeNode, grid):
 			elif node.solution[i+1] == \"L\":
 				move_yellow_robot(\"left\",new_grid)
 		i += 2
-	
+
 func _ready() -> void:
 	var grid = create_grid()
 	grid = [ 
@@ -244,12 +243,12 @@ func _ready() -> void:
 	instanciate_target(Global.target_position.x,Global.target_position.y,grid)
 	
 	Global.noeud_rac.add_4_robot_4_move(Global.noeud_rac)
+	for node in Global.noeud_rac.children:
+		Global.noeud_rac.add_4_robot_4_move(node)
+		for sub_node in Global.noeud_rac.children:
+			Global.noeud_rac.add_4_robot_4_move(sub_node)
 	
-	var solution_find = false
-	var new_grid= []
-	Global.noeud_rac.parcours(Global.noeud_rac)
-	print(solve_with_recursive_bfs(Global.noeud_rac,grid,solution_find))
-	
+	solve_with_recursive_bfs(Global.noeud_rac,grid)
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqckr"]

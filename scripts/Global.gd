@@ -25,3 +25,7 @@ var target_position = Vector2(12,13)
 
 # Structure to store all combination and find the solution
 var noeud_rac = TreeNode.new("0","0")
+
+# Solution
+var solution: String
+var solution_found: bool
