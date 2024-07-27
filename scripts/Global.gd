@@ -24,8 +24,11 @@ var static_collide= false
 var target_position = Vector2(12,13)
 
 # Structure to store all combination and find the solution
-var noeud_rac = TreeNode.new("0","0")
+var noeud_rac = TreeNode.new("")
 
 # Solution
 var solution: String
 var solution_found: bool
+
+# Queue for BFS recursive search
+var queue_bfs = []
