@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://csh3g3ao2uyvt"]
+
+[node name="Checker" type="Node2D"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 50.0
+offset_bottom = 50.0

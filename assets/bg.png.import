@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csphhmuj7en0h"
-path="res://.godot/imported/CelestialObjects.png-fa957507a8eb20a8efa1114732132544.ctex"
+uid="uid://b8qcorjialy4q"
+path="res://.godot/imported/bg.png-23a59c2e9cba2223a50fa3fe41b70b25.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://CelestialObjects.png"
-dest_files=["res://.godot/imported/CelestialObjects.png-fa957507a8eb20a8efa1114732132544.ctex"]
+source_file="res://assets/bg.png"
+dest_files=["res://.godot/imported/bg.png-23a59c2e9cba2223a50fa3fe41b70b25.ctex"]
 
 [params]
 

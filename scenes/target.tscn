@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://fr0y3hfol1n5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nuqab"]
+bg_color = Color(0.2, 0.8, 0.2, 0.89)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_poo6k"]
+size = Vector2(25, 25.5)
+
+[node name="Target" type="Area2D"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 50.0
+offset_bottom = 50.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_nuqab")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["target"]]
+position = Vector2(25, 25)
+shape = SubResource("RectangleShape2D_poo6k")

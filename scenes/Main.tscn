@@ -1,0 +1,400 @@
+[gd_scene load_steps=7 format=3 uid="uid://m8lywpoyi1pw"]
+
+[ext_resource type="Texture2D" uid="uid://b8qcorjialy4q" path="res://assets/bg.png" id="1_10lv7"]
+[ext_resource type="PackedScene" uid="uid://brpfb5gqdqkcw" path="res://scenes/wall.tscn" id="3_1p0ql"]
+[ext_resource type="Texture2D" uid="uid://dyne4c40xkco6" path="res://assets/linux_logo_icon_168243.png" id="4_4yeak"]
+
+[sub_resource type="GDScript" id="GDScript_jb15w"]
+script/source = "extends Node
+
+var size_grid = 15
+
+@onready var Wall = preload(\"res://scenes/wall.tscn\")
+@onready var ROBOT = preload(\"res://scenes/Robot.tscn\")
+@onready var CHECKER = preload(\"res://scenes/checker.tscn\")
+@onready var TARGET = preload(\"res://scenes/target.tscn\")
+
+func instanciate_wall(x:int, y:int, south:bool) -> void:
+	var wall = Wall.instantiate()
+	if south:
+		wall.set_position(Vector2(x*50-2,y*50))
+		add_child(wall)
+	else:
+		wall.set_position(Vector2(x*50,y*50+2))
+		wall.set_rotation(deg_to_rad(-90))
+		add_child(wall)
+
+func instanciate_target(x:int, y:int, grid:Array) -> void:
+	var target = TARGET.instantiate()
+	target.set_position(Vector2(x*50,y*50))
+	grid[y][x] = grid[y][x] + \"T\"
+	add_child(target)
+
+func instanciate_robot(x:int, y:int ,color:String, grid:Array) -> void:
+	var robot = ROBOT.instantiate()
+	robot.set_position(Vector2(x*50,y*50))
+	if color == \"RED\":
+		robot.robot_color = robot.COLOR.RED
+		grid[y][x] += \"R\"
+		Global.red_position = Vector2(x,y)
+	elif color == \"BLUE\":
+		robot.robot_color = robot.COLOR.BLUE
+		grid[y][x] += \"B\"
+		Global.blue_position = Vector2(x,y)
+	elif color == \"GREEN\":
+		robot.robot_color = robot.COLOR.GREEN
+		grid[y][x] += \"G\"
+		Global.green_position = Vector2(x,y)
+	else:
+		robot.robot_color = robot.COLOR.YELLOW
+		grid[y][x] += \"Y\"
+		Global.yellow_position = Vector2(x,y)
+	add_child(robot)
+
+func create_grid() -> Array:
+	var grid = []
+	for i in range(16): 
+		grid.append([])
+		for j in range(16): 
+			grid[i].append(\"\")
+	return grid
+
+func move_red_robot(direction:String, grid:Array) -> void:
+	grid[Global.red_position.y][Global.red_position.x] = grid[Global.red_position.y][Global.red_position.x].left(grid[Global.red_position.y][Global.red_position.x].length()-1)
+	if direction == \"right\":
+		while Global.red_position.x != size_grid and \"G\" not in grid[Global.red_position.y][Global.red_position.x + 1] and \"B\" not in grid[Global.red_position.y][Global.red_position.x + 1] and \"Y\" not in grid[Global.red_position.y][Global.red_position.x + 1] and (not (\"2\" in grid[Global.red_position.y][Global.red_position.x])):
+			Global.red_position.x += 1
+	if direction == \"left\":
+		while Global.red_position.x != 0 and \"G\" not in grid[Global.red_position.y][Global.red_position.x - 1] and \"B\" not in grid[Global.red_position.y][Global.red_position.x - 1] and \"Y\" not in grid[Global.red_position.y][Global.red_position.x - 1] and (not (\"0\" in grid[Global.red_position.y][Global.red_position.x])):
+			Global.red_position.x -= 1
+	if direction == \"up\":
+		while Global.red_position.y != 0 and  \"G\" not in grid[Global.red_position.y -1 ][Global.red_position.x] and \"B\" not in grid[Global.red_position.y -1][Global.red_position.x] and \"Y\" not in grid[Global.red_position.y-1][Global.red_position.x] and (not (\"1\" in grid[Global.red_position.y][Global.red_position.x])):
+			Global.red_position.y -= 1
+	if direction == \"down\":
+		while Global.red_position.y != size_grid and  \"G\" not in grid[Global.red_position.y +1 ][Global.red_position.x] and \"B\" not in grid[Global.red_position.y +1][Global.red_position.x] and \"Y\" not in grid[Global.red_position.y+1][Global.red_position.x] and (not (\"3\" in grid[Global.red_position.y][Global.red_position.x])):
+			Global.red_position.y += 1
+	grid[Global.red_position.y][Global.red_position.x] += \"R\"
+
+func move_blue_robot(direction:String, grid:Array) -> void:
+	grid[Global.blue_position.y][Global.blue_position.x] = grid[Global.blue_position.y][Global.blue_position.x].left(grid[Global.blue_position.y][Global.blue_position.x].length()-1)
+	if direction == \"right\":
+		while Global.blue_position.x != size_grid and \"G\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and \"R\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and \"Y\" not in grid[Global.blue_position.y][Global.blue_position.x + 1] and (not (\"2\" in grid[Global.blue_position.y][Global.blue_position.x])):
+			Global.blue_position.x += 1
+	if direction == \"left\":
+		while Global.blue_position.x != 0 and \"G\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and \"R\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and \"Y\" not in grid[Global.blue_position.y][Global.blue_position.x - 1] and (not (\"0\" in grid[Global.blue_position.y][Global.blue_position.x])):
+			Global.blue_position.x -= 1
+	if direction == \"up\":
+		while Global.blue_position.y != 0 and \"G\" not in grid[Global.blue_position.y -1 ][Global.blue_position.x] and \"R\" not in grid[Global.blue_position.y -1][Global.blue_position.x] and \"Y\" not in grid[Global.blue_position.y-1][Global.blue_position.x] and (not (\"1\" in grid[Global.blue_position.y][Global.blue_position.x])):
+			Global.blue_position.y -= 1
+	if direction == \"down\":
+		while Global.blue_position.y != size_grid and \"G\" not in grid[Global.blue_position.y +1 ][Global.blue_position.x] and \"R\" not in grid[Global.blue_position.y +1][Global.blue_position.x] and \"Y\" not in grid[Global.blue_position.y+1][Global.blue_position.x] and (not (\"3\" in grid[Global.blue_position.y][Global.blue_position.x])):
+			Global.blue_position.y += 1
+	grid[Global.blue_position.y][Global.blue_position.x] += \"B\"
+
+func move_green_robot(direction:String, grid:Array) -> void:
+	grid[Global.green_position.y][Global.green_position.x] = grid[Global.green_position.y][Global.green_position.x].left(grid[Global.green_position.y][Global.green_position.x].length()-1)
+	if direction == \"right\":
+		while Global.green_position.x != size_grid and \"B\" not in grid[Global.green_position.y][Global.green_position.x + 1] and \"R\" not in grid[Global.green_position.y][Global.green_position.x + 1] and \"Y\" not in grid[Global.green_position.y][Global.green_position.x + 1] and (not (\"2\" in grid[Global.green_position.y][Global.green_position.x])):
+			Global.green_position.x += 1
+	if direction == \"left\":
+		while Global.green_position.x != 0 and \"B\" not in grid[Global.green_position.y][Global.green_position.x - 1] and \"R\" not in grid[Global.green_position.y][Global.green_position.x - 1] and \"Y\" not in grid[Global.green_position.y][Global.green_position.x - 1] and (not (\"0\" in grid[Global.green_position.y][Global.green_position.x])):
+			Global.green_position.x -= 1
+	if direction == \"up\":
+		while Global.green_position.y != 0 and \"B\" not in grid[Global.green_position.y -1 ][Global.green_position.x] and \"R\" not in grid[Global.green_position.y -1][Global.green_position.x] and \"Y\" not in grid[Global.green_position.y-1][Global.green_position.x] and (not (\"1\" in grid[Global.green_position.y][Global.green_position.x])):
+			Global.green_position.y -= 1
+	if direction == \"down\":
+		while Global.green_position.y != size_grid and \"B\" not in grid[Global.green_position.y +1 ][Global.green_position.x] and \"R\" not in grid[Global.green_position.y +1][Global.green_position.x] and \"Y\" not in grid[Global.green_position.y+1][Global.green_position.x] and (not (\"3\" in grid[Global.green_position.y][Global.green_position.x])):
+			Global.green_position.y += 1
+	grid[Global.green_position.y][Global.green_position.x] += \"G\"
+
+func move_yellow_robot(direction:String, grid:Array) -> void:
+	grid[Global.yellow_position.y][Global.yellow_position.x] = grid[Global.yellow_position.y][Global.yellow_position.x].left(grid[Global.yellow_position.y][Global.yellow_position.x].length()-1)
+	if direction == \"right\":
+		while Global.yellow_position.x != size_grid and \"B\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and \"R\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and \"G\" not in grid[Global.yellow_position.y][Global.yellow_position.x + 1] and (not (\"2\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
+			Global.yellow_position.x += 1
+	if direction == \"left\":
+		while Global.yellow_position.x != 0 and \"B\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and \"R\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and \"G\" not in grid[Global.yellow_position.y][Global.yellow_position.x - 1] and (not (\"0\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
+			Global.yellow_position.x -= 1
+	if direction == \"up\":
+		while Global.yellow_position.y != 0 and \"B\" not in grid[Global.yellow_position.y -1 ][Global.yellow_position.x] and \"R\" not in grid[Global.yellow_position.y -1][Global.yellow_position.x] and \"G\" not in grid[Global.yellow_position.y-1][Global.yellow_position.x] and (not (\"1\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
+			Global.yellow_position.y -= 1
+	if direction == \"down\":
+		while Global.yellow_position.y != size_grid and \"B\" not in grid[Global.yellow_position.y +1 ][Global.yellow_position.x] and \"R\" not in grid[Global.yellow_position.y +1][Global.yellow_position.x] and \"G\" not in grid[Global.yellow_position.y+1][Global.yellow_position.x] and (not (\"3\" in grid[Global.yellow_position.y][Global.yellow_position.x])):
+			Global.yellow_position.y += 1
+	grid[Global.yellow_position.y][Global.yellow_position.x] += \"Y\"
+
+func move_robot(direction:String,color:String,grid:Array) -> void:
+	if color == \"red\":
+		move_red_robot(direction,grid)
+	elif color == \"blue\":
+		move_red_robot(direction,grid)
+	elif color == \"green\":
+		move_red_robot(direction,grid)
+	elif color == \"yellow\":
+		move_red_robot(direction,grid)
+
+func solve_with_recursive_bfs(queue_bfs:Array,grid:Array):
+		var feasible_move = true
+		var node = Global.queue_bfs.pop_front()
+		if node.solution == \"\":
+			print(\"Noeud racine 0\") # LAS
+			add_children_for_node(node, grid)
+			for child in node.children:
+				solve_with_recursive_bfs(Global.queue_bfs,grid)
+		else:
+			if not Global.solution_found:
+				var red_position_before = Global.red_position
+				var blue_position_before = Global.blue_position
+				var green_position_before = Global.green_position
+				var yellow_position_before = Global.yellow_position
+				var try_move_res = try_move(node.solution,grid)
+				feasible_move = try_move_res[0]
+				var green_position_after = try_move_res[1]
+				if green_position_after == Global.target_position:
+					Global.solution_found=true
+					print(\"SOLUTION TROUVEE: \", node.solution)
+					Global.solution = node.solution
+				Global.red_position = red_position_before 
+				Global.blue_position = blue_position_before 
+				Global.green_position = green_position_before 
+				Global.yellow_position = yellow_position_before
+			elif Global.solution_found:
+				return 
+			if feasible_move:
+				add_children_for_node(node, grid)
+				for child in node.children:
+					solve_with_recursive_bfs(Global.queue_bfs,grid)
+		
+func try_move(move: String , grid:Array):
+	var i=0
+	var new_grid = grid.duplicate(true)
+	var feasible_move = true
+	var red_position = Global.red_position
+	var green_position = Global.green_position
+	var blue_position = Global.blue_position
+	var yellow_position = Global.yellow_position
+	while i < move.length() and feasible_move:
+		if move[i] == \"R\":
+			if move[i+1] == \"U\":
+				move_red_robot(\"up\",new_grid)
+			elif move[i+1] == \"R\":
+				move_red_robot(\"right\",new_grid)
+			elif move[i+1] == \"D\":
+				move_red_robot(\"down\",new_grid)
+			elif move[i+1] == \"L\":
+				move_red_robot(\"left\",new_grid)
+			# check red position
+			if red_position == Global.red_position:
+				feasible_move=false
+		if move[i] == \"G\":
+			if move[i+1] == \"U\":
+				move_green_robot(\"up\",new_grid)
+			elif move[i+1] == \"R\":
+				move_green_robot(\"right\",new_grid)
+			elif move[i+1] == \"D\":
+				move_green_robot(\"down\",new_grid)
+			elif move[i+1] == \"L\":
+				move_green_robot(\"left\",new_grid)
+			# check green_position
+			if green_position == Global.green_position:
+				feasible_move=false
+		if move[i] == \"B\":
+			if move[i+1] == \"U\":
+				move_blue_robot(\"up\",new_grid)
+			elif move[i+1] == \"R\":
+				move_blue_robot(\"right\",new_grid)
+			elif move[i+1] == \"D\":
+				move_blue_robot(\"down\",new_grid)
+			elif move[i+1] == \"L\":
+				move_blue_robot(\"left\",new_grid)
+			# check move_blue_robot
+			if blue_position == Global.blue_position:
+				feasible_move=false
+		if move[i] == \"Y\":
+			if move[i+1] == \"U\":
+				move_yellow_robot(\"up\",new_grid)
+			elif move[i+1] == \"R\":
+				move_yellow_robot(\"right\",new_grid)
+			elif move[i+1] == \"D\":
+				move_yellow_robot(\"down\",new_grid)
+			elif move[i+1] == \"L\":
+				move_yellow_robot(\"left\",new_grid)
+			# check move_blue_robot
+			if yellow_position == Global.yellow_position:
+				feasible_move=false
+		i += 2
+	var return_green_position = Global.green_position
+	Global.red_position = red_position
+	Global.green_position = green_position
+	Global.blue_position = blue_position
+	Global.yellow_position = yellow_position
+	return [feasible_move,return_green_position]
+
+func add_children_for_node(node: TreeNode,grid:Array):
+	# CHECK ALL MOVE RED 
+	if try_move(node.solution + \"RU\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"RU\"))
+	if try_move(node.solution + \"RR\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"RR\"))
+	if try_move(node.solution + \"RD\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"RD\"))
+	if try_move(node.solution + \"RL\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"RL\"))
+		
+	# CHECK ALL MOVE GREEN 
+	if try_move(node.solution + \"GU\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"GU\"))
+	if try_move(node.solution + \"GR\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"GR\"))
+	if try_move(node.solution + \"GD\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"GD\"))
+	if try_move(node.solution + \"GL\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"GL\"))
+		
+	# CHECK ALL MOVE BLUE 
+	if try_move(node.solution + \"BU\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"BU\"))
+	if try_move(node.solution + \"BR\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"BR\"))
+	if try_move(node.solution + \"BD\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"BD\"))
+	if try_move(node.solution + \"BL\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"BL\"))
+		
+	# CHECK ALL MOVE YELLOW 
+	if try_move(node.solution + \"YU\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"YU\"))
+	if try_move(node.solution + \"YR\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"YR\"))
+	if try_move(node.solution + \"YD\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"YD\"))
+	if try_move(node.solution + \"YL\",grid)[0]:
+		node.children.append(TreeNode.new(node.solution + \"YL\"))
+		
+	# Add child in BFS queue
+	for child_node in node.children:
+		Global.queue_bfs.append(child_node)
+	
+func _ready() -> void:
+	var grid = create_grid()
+	grid = [ 
+	[ \"\", \"2\", \"0\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"2\", \"0\", \"\", \"\", \"\" ],
+	[ \"\", \"\", \"2\", \"01\", \"\", \"\", \"\", \"\", \"\", \"23\", \"0\", \"\", \"\", \"\", \"\", \"\" ],
+	[ \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"3\" ],
+	[ \"\", \"\", \"\", \"\", \"\", \"\", \"23\", \"0\", \"\", \"\", \"2\", \"03\", \"\", \"\", \"\", \"1\" ],
+	[ \"2\", \"03\", \"\", \"\", \"\", \"\", \"1\", \"\", \"\", \"\", \"\", \"1\", \"\", \"\", \"\", \"\" ],
+	[ \"\", \"1\", \"\", \"\", \"3\", \"\", \"\", \"\", \"\", \"\", \"3\", \"\", \"\", \"\", \"\", \"\" ],
+	[ \"3\", \"\", \"\", \"\", \"12\", \"0\", \"\", \"3\", \"3\", \"\", \"12\", \"0\", \"\", \"\", \"\", \"\" ],
+	[ \"1\", \"\", \"\", \"\", \"\", \"\", \"2\", \"01\", \"12\", \"0\", \"\", \"\", \"2\", \"03\", \"\", \"\" ],
+	[ \"\", \"\", \"\", \"\", \"\", \"\", \"2\", \"03\", \"23\", \"0\", \"\", \"\", \"\", \"1\", \"\", \"\" ],
+	[ \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"1\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\", \"2\" ],
+	[ \"\", \"3\", \"\", \"\", \"2\", \"03\", \"\", \"\", \"\", \"\", \"2\", \"01\", \"\", \"\", \"\", \"\" ],
+	[ \"2\", \"01\", \"\", \"\", \"\", \"1\", \"3\", \"\", \"\", \"\", \"3\", \"\", \"2\", \"03\", \"\", \"3\" ],
+	[ \"\", \"\", \"\", \"\", \"\", \"\", \"12\", \"\", \"\", \"\", \"12\", \"\", \"\", \"1\", \"\", \"1\" ],
+	[ \"3\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"23\", \"0\", \"\", \"\" ],
+	[ \"1\", \"\", \"\", \"23\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"1\", \"\", \"\", \"\" ],
+	[ \"\", \"\", \"\", \"1\", \"\", \"2\", \"\", \"\", \"\", \"2\", \"\", \"\", \"\", \"\", \"\", \"\" ]
+	]
+	
+	# Instanciate all walls
+	for y in range(16):
+		for x in range(16):
+			# WALL VERTICAL 
+			if \"2\" in grid[y][x]:
+				if x != 15:
+					instanciate_wall(x+1,y,true)
+			# WALL HORIZON
+			if \"1\" in grid[y][x]:
+				if y != 0:	
+					instanciate_wall(x,y,false)
+	
+	# Instanciate all robots
+	instanciate_robot(7,3,\"RED\",grid)
+	instanciate_robot(15,2,\"GREEN\",grid)
+	instanciate_robot(7,6,\"BLUE\",grid)
+	instanciate_robot(3,11,\"YELLOW\",grid)
+	instanciate_target(Global.target_position.x,Global.target_position.y,grid)
+		
+	print(\"Initial green position: \", Global.green_position)
+	Global.queue_bfs = [Global.noeud_rac]
+	solve_with_recursive_bfs(Global.queue_bfs,grid)
+	Global.queue_bfs = []
+	print(\"FIN BFS\")
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqckr"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g1sig"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Node2D"]
+script = SubResource("GDScript_jb15w")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(500, 500)
+texture = ExtResource("1_10lv7")
+
+[node name="Panel" type="Panel" parent="Background"]
+offset_left = -659.0
+offset_top = 298.0
+offset_right = 518.0
+offset_bottom = 498.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hqckr")
+
+[node name="Panel2" type="Panel" parent="Background"]
+offset_left = 300.0
+offset_top = -500.0
+offset_right = 500.0
+offset_bottom = 300.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_g1sig")
+
+[node name="Middle_Earth" type="Node2D" parent="Background"]
+position = Vector2(-502, -550)
+
+[node name="Wall" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(448, 450)
+
+[node name="Wall3" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(350, 400)
+
+[node name="Wall8" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(448, 400)
+
+[node name="Wall9" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(350, 448)
+
+[node name="Wall4" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(400, 495)
+rotation = 1.5708
+
+[node name="Wall5" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(450, 495)
+rotation = 1.5708
+
+[node name="Wall6" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(448, 400)
+rotation = 1.5708
+
+[node name="Wall7" parent="Background/Middle_Earth" instance=ExtResource("3_1p0ql")]
+position = Vector2(400, 400)
+rotation = 1.5708
+
+[node name="LinuxLogoIcon168243" type="Sprite2D" parent="Background/Middle_Earth"]
+position = Vector2(400, 452)
+scale = Vector2(0.2073, 0.152757)
+texture = ExtResource("4_4yeak")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(407, 404)
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = -179.0
+offset_top = -200.0
+offset_right = 997.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hqckr")
+
+[node name="Panel2" type="Panel" parent="."]
+offset_left = -200.0
+offset_bottom = 800.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_g1sig")
